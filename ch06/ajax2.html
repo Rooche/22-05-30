@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ch06/ajax2.html</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      let url = 'https://jsonplaceholder.typicode.com/photos';
+      let xhtp = new XMLHttpRequest();
+      xhtp.open('GET', url); //서버 페이지 요청할때 open을 쓴다 open('GET', '요청할 페이지')
+      xhtp.send(); // send를 써야 요청이 완료됨
+      xhtp.onload = function(){
+        console.log(JSON.parse(xhtp.responseText)); //json 타입에 parse를 사용하여 자바스크립트에서 오브젝트타입으로 사용할수있게 한다
+        let result = JSON.parse(xhtp.responseText); //result값이 배열형태로 들어감
+
+        let filterAry = result.filter(elem => elem.albumId == 1 && elem.id <= 10);
+        let ul = document.createElement('ul'); // ul이라는 태그를 만듬 <ul></ul>
+        filterAry.forEach(elem => {
+          let li = document.createElement('li'); // li이라는 태그를 만듬 <li></li>
+          li.innerHTML = elem.id + ', ' + elem.title + '<span><img width="40px" src="' + elem.thumbnailUrl + '"</span>';
+          ul.append(li); //ul과 li를 부모자식관계로 만듬 append <ul><li> ~ </li> <li> ~ </li></ul>
+        });
+        document.getElementById('show').append(ul);
+      }
+    })
+  </script>
+</head>
+<body>
+  <div id="show"></div>
+</body>
+</html>

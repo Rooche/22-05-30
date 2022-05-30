@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cho07/dom.html</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () { //이벤트가 발생하면 (이벤트, 발생할함수)
+      let friens = ['송도언', '소진영', '우영원']
+
+      let newUl = document.querySelector('#newfriends');
+      friens.forEach((friend) => {//매개값으로 function을 바꾼다
+        let li = document.createElement('li');
+        // mouse로 li태그를 클릭하면 반응함
+        // li.addEventListener('click', function(){ //이벤트가 등록되는 메소드
+
+        // mouse가 li태그의 범위에 들어가면 반응함
+        li.addEventListener('mouseover', function () { //
+          console.log(this); // event를 받는 대상 this
+          this.style.background = 'yellow';
+        });
+        // mouse가 li태그의 범위에서 벗어나면 반응함
+        li.addEventListener('mouseout', function () { //이벤트가 등록되는 메소드
+          console.log(this); // event를 받는 대상 this
+          this.style.background = '';
+        });
+
+        let txt = document.createTextNode(friend);
+        li.appendChild(txt); //appendChild와 append의 차이?
+
+        // 버튼생성
+        let btn = document.createElement('button');
+        btn.innerText = '삭제';
+        btn.addEventListener('click', function () {
+          this.parentElement.remove();//버튼태그에 부모요소가 리스트태그를 삭제하겠습니다
+        })
+        li.append(btn); //하위요소로 btn을 붙여줌 append..
+
+        // ul > li
+        newUl.append(li);
+
+        // 라이언 어피치 프로도 콘
+        document.querySelectorAll('#friends>li').forEach(li => {
+    
+          li.addEventListener('mouseover', function () { 
+          this.style.background = 'yellow';
+        });
+    
+        li.addEventListener('mouseout', function () { //이벤트가 등록되는 메소드
+          this.style.background = '';
+        });
+    
+        });
+        
+      })
+    });
+
+  </script>
+</head>
+
+<body>
+  <!---->
+  <ul id="friends">
+    <li class="animal">라이언</li>
+    <li class="fruit">어피치</li>
+    <li class="animal">프로도</li>
+    <li class="alien">콘
+      <ul class="keyword">
+        <li>3세</li>
+        <li>숏다리</li>
+        <li>초록괴수</li>
+      </ul>
+    </li>
+  </ul>
+  <ul class="icons">
+    <li>
+      <span>스몰</span>
+      <span>미디엄</span>
+      <span>빅</span>
+    </li>
+  </ul>
+  <ul id="newfriends">
+
+  </ul>
+</body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ch06/ajax3.html</title>
+  <style>
+    #show>a {
+      display: inline-block;
+      width: 5px;
+      margin-left: 8px;
+      margin-right: 8px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="text" name="" id="searchCenter" value="서울특별시">
+  <button id="searchBtn">센터찾기</button>
+
+  <div id="show"></div>
+  <!--코로나 예방접종센터 위치정보 API 확인-->
+  <script>
+    //페이지가 로딩될때 실행되는 부분
+    let url = 'https://api.odcloud.kr/api/15077586/v1/centers?page=1&perPage=284&returnType=JSON&serviceKey=2g%2F0ruZMmeBtnGAmvfzhrhA3jjDw5qrxJGXobIeTn5g4UL08k5jFAg508CtJNBJJkv2zNQO9SSW%2FOZfZgshwKA%3D%3D';
+    let xhtp = new XMLHttpRequest();
+    let dataAry = '';
+    xhtp.open('GET', url);
+    xhtp.send();
+    xhtp.onreadystatechange = function () { // client <--> server 클라이언트랑 서버랑 상태가 바뀌늑너 확인할수있음
+      console.log('요청상태', xhtp.readyState, '서버상태', xhtp.status);
+      if (xhtp.readyState == 4 && xhtp.status == 200) {
+        let result = JSON.parse(xhtp.responseText);
+        console.log(result);
+        dataAry = result.data; // 배열형태로 들어있는
+
+        let fAry = dataAry.filter(center => { //새로 넣은거임
+          let searchCenter = document.getElementById('searchCenter').value;
+          return center.sido == searchCenter;
+        });
+
+        let table = document.createElement('table'); // table 생성 <table></table>
+        table.setAttribute('border', 1); // <table border = 1>
+        table.setAttribute('id', 'tbl');// 아이디값이 tbl인 값을 찾아와서 append할것이다.
+        table.append(makeHeader());
+        // table.append(makeBody(dataAry)); // 바디에 배열전체의 매개값을 넘겨줌
+        table.append(makeBody(fAry, 1)); // 서울특별시만 찾기 추가된 1은 1페이지만 보겠다는 뜻
+        makePage(fAry);
+        document.getElementById('show').append(table);
+      }
+    };
+
+    // 검색가능 버튼
+    document.getElementById('searchBtn').addEventListener('click', function () {
+      // 버튼 클릭이 되면 실행할 함수
+      let fAry = dataAry.filter(center => { //새로 넣은거임
+        let searchCenter = document.getElementById('searchCenter').value;
+        return center.sido.includes(searchCenter);
+        // 처음에는 return center.sido == searchCenter 여서 정확한 이름만 비교되었지만 
+        //includes를 사용하여 특정이름만 사용해도 포함된거 전부 검색할수있게바꿈
+      });
+      document.getElementById('tbl').append(makeBody(fAry, 1));
+      makePage(fAry);
+    });
+
+
+
+    let fields = ['id', 'sido', 'centerName', 'address']
+    // header 정보를 만들어주는 함수 하나
+    function makeHeader() {
+      let thead = document.createElement('thead'); // thead태그를 만든다 <thead></thead>
+      let tr = document.createElement('tr'); // tr태그를 만듬 <tr></tr>
+      thead.append(tr); // <thead><tr>..</tr></thead> tr을 thead의 자식요소로 만듬
+      fields.forEach(field => {
+        let th = document.createElement('th'); // th태그를 만듬 <th></th>
+        th.innerText = field.toUpperCase();
+        tr.append(th); // <tr><th>...</th><tr> th를 tr자식 요소로 만듬
+      });
+      return thead; //
+    }
+
+
+    // body 정보도 만들어주는 함수 하나
+    function makeBody(ary, page) {
+      //page => 1page : 1 ~ 20, 2page : 11 ~ 20 3page : 21 ~ 30;
+      //index =>         0 ~ 9 ,        10 ~ 19,        ....
+      //starCnt, endCnt; 1: (page-1)*10, (page)*10-1; // page2-1 = 1 * 10 => 1페이지 10개, 2페이지 x 10 - 1 = 10 ~ 19 = 10개
+      let startCnt = (page - 1) * 10;
+      let endCnt = (page) * 10 - 1;
+
+      //초기값 서울시
+      if (document.querySelector('#tbl>tbody') != null) {
+        document.querySelector('#tbl>tbody').remove();
+      };
+
+      let tbody = document.createElement('tbody'); // thead태그를 만든다 <thead></thead>
+      ary.forEach((elem, idx) =>{ //idx를 추가하였고 idx는 0부터 시작한다 idx로 0 ~ 9까지 10 ~ 19까지 20 ~ 29까지 ...
+
+    
+          if (idx >= startCnt && idx <= endCnt)
+          tbody.append(makeTr(elem));
+      });
+      return tbody;
+    }
+
+   //tr 생성
+    function makeTr(obj) {
+      let tr = document.createElement('tr'); // tr태그를 만듬 <tr></tr>
+      fields.forEach(field => {
+        let td = document.createElement('td'); // td태그를 만듬 <td></td>
+        if (field != 'address') {
+          td.innerText = obj[field];
+        } else if (field == 'address') {
+          let a = document.createElement('a');
+          a.setAttribute('href', `daumapp.html?centerName=${obj.centerName}&xpos=${obj.lat}&ypos=${obj.lng}`); // daumapp.html파일과 연결함 거기에 있는 xpos과 ypos. ..
+          a.setAttribute('target', '_blank');
+          a.innerText = obj[field];
+          td.append(a);
+        }
+        tr.append(td); // <td>서울특별시 ~~ </td>
+      })
+      return tr;
+    }
+
+
+    // 페이지 생성
+    function makePage(ary) {
+      //검색시 밑에 생기는 숫자 없애주기
+      document.querySelectorAll('#show>a').forEach(el => el.remove());
+
+      let show = document.getElementById('show');
+      //ary => 21 : 1, 2 page, 20이면 =>2, 21 => 2.1
+      let totalPage = Math.ceil(ary.length / 10); // ceil 올림해준다
+      for (let i = 1; i <= totalPage; i++) {
+        let a = document.createElement('a');
+        a.addEventListener('click', function (e) {
+          e.preventDefault(); //기본기능 차단
+          let page = e.target.innerText;
+          document.getElementById('tbl').append(makeBody(ary, page));
+        })
+        a.innerHTML = i;
+        a.setAttribute('href', '#');
+        show.append(a);
+      }
+    }
+  </script>
+</body>
+
+</html>

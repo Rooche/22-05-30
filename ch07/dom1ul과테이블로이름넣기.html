@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ch07/dom1.html</title>
+</head>
+
+<body>
+  이름: <input tpye="text" name="" id="name" value="홍길동"><br>
+  나이: <input type="number" name="" id="age" value="20"><br>
+  <button>입력</button>
+  <hr>
+  <!--          첫번째 방법  ul + li로 표현                -->
+  <!-- <ul id="list"></ul> -->
+  <!-- <script>
+      document.querySelector('button').addEventListener('click',addContent);
+      //길어지면 function을 밑에 적어도 됨
+      function addContent(){
+        console.log(this); //함수에서 this는 전역객체
+        let vanem = document.getElementById('name').value; // 만약 속성이 obj = {name:'hong'}이라면 obj.name
+        let vage = document.getElementById('age').value;
+        let li = document.createElement('li') // li리스트에 담겠다
+        li.innerText = `${vname}, ${vage}`;
+    
+        //ul 하위요소 li추가
+        document.getElementById('list').append(li);
+    
+        //입력항목 지우기
+        document.getElementById('name').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('age').focus();
+      }
+    </script> -->
+
+<!--                       두번째 방법      table로 표현            -->
+  <!-- <table border="1">
+    <thead>
+      <th>이름</th>
+      <th>나이</th>
+    </thead>
+
+    <tbody id="list">
+      <div style ="display:none;">
+        <tr id="result">
+          <td>홍길동</td>
+          <td>20</td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+
+  <script>
+    document.querySelector('button').addEventListener('click', addContent);
+    function addContent() {
+      console.log(this);
+      let vname = document.getElementById('name').value;
+      let vage = document.getElementById('age').value;
+      let elem = [vname, vage];
+
+      let tr = document.createElement('tr');
+
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el; //vname;
+        tr.append(td);
+      })
+
+      //입력항목 추가
+      document.getElementById('list').append(tr);
+
+      //입력항목 지우기
+      document.getElementById('name').value = '';
+      document.getElementById('age').value = '';
+      document.getElementById('name').focus();
+    }
+
+    function makeTr(elem) {
+      let tr = document.createElement('tr');
+
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el;
+        tr.append(td);
+      })
+      return tr; //DOM
+    }
+
+    function cloneElement(){
+
+    }
+  </script> -->
+
+<!--                    세번째 방법 table로 표현               -->
+  <!-- <table border="1">
+    <thead>
+      <th>이름</th>
+      <th>나이</th>
+    </thead>
+    <tbody id="list">
+    </tbody>
+  </table>
+    
+    <div style ="display:none;">
+      <table>
+        <tr id="result">
+          <td>홍길동</td>
+          <td>20</td>
+        </tr>
+      </table>
+    </div>
+
+
+  <script>
+    document.querySelector('button').addEventListener('click', addContent);
+    function addContent() {
+      console.log(this);
+      let vname = document.getElementById('name').value;
+      let vage = document.getElementById('age').value;
+      let elem = [vname, vage];
+
+      let tr = document.createElement('tr');
+
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el;
+        tr.append(td);
+      })
+
+      //입력항목 추가
+      document.getElementById('list').append(cloneElement());
+
+      //입력항목 지우기
+      document.getElementById('name').value = '';
+      document.getElementById('age').value = '';
+      document.getElementById('name').focus();
+    }
+
+    function makeTr(elem) {
+      let tr = document.createElement('tr');
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el;
+        tr.append(td);
+      })
+      return tr; //DOM
+    }
+
+    function cloneElement(){
+      let cloneTr = document.getElementById('result').cloneNode(true);
+      cloneTr.firstElementChild.innerText = document.getElementById('name').value;
+      cloneTr.lastElementChild.innerText = document.getElementById('age').value;
+
+      return cloneTr;
+    }
+  </script> -->
+
+
+  <table border="1">
+    <thead>
+      <th>이름</th>
+      <th>나이</th>
+    </thead>
+    <tbody id="list">
+    </tbody>
+  </table>
+    
+    <div style ="display:none;">
+      <table>
+        <tr id="result">
+          <td>홍길동</td>
+          <td>20</td>
+        </tr>
+      </table>
+    </div>
+
+
+  <script>
+    document.querySelector('button').addEventListener('click', addContent);
+    function addContent() {
+      console.log(this);
+      let vname = document.getElementById('name').value;
+      let vage = document.getElementById('age').value;
+
+      // 입력값이 없으면 처리가 중단
+      // 두개중 하나의 값이 없으면 값을 입력하세요 라고 보여줌
+      if(!vname || !vage){ // 0, '', null, undefined => false
+        alert('값을 입력하세요'); // 특정조건 불만족시 alert()를 사용하여 단어를 보여줌
+        return;
+      }
+
+
+      let elem = [vname, vage];
+
+      let tr = document.createElement('tr');
+
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el;
+        tr.append(td);
+      })
+
+      //입력항목 추가
+      document.getElementById('list').append(cloneElement(elem));
+
+      //입력항목 지우기
+      document.getElementById('name').value = '';
+      document.getElementById('age').value = '';
+      document.getElementById('name').focus();
+    }
+
+    function makeTr(elem) {
+      let tr = document.createElement('tr');
+      elem.forEach(el => {
+        let td = document.createElement('td');
+        td.innerText = el;
+        tr.append(td);
+      })
+      return tr; //DOM
+    }
+
+    //입력항목 추가
+    //document.getElementById('list').append(cloneElement()); 이거까지 변경하고 밑에꺼 써야함
+    // function cloneElement(){ // 주석 처리 한 이유는 다른방법도 있어서 한거지 안되서 한게 아님.
+    //   let cloneTr = document.getElementById('result').cloneNode(true);
+    //   cloneTr.firstElementChild.innerText = document.getElementById('name').value;
+    //   cloneTr.lastElementChild.innerText = document.getElementById('age').value;
+
+    //   return cloneTr;
+    // }
+
+    //입력항목 추가
+    //document.getElementById('list').append(cloneElement(elem)); 이거까지 변경하고 밑에꺼 써야함
+    function cloneElement(el){
+      let cloneTr = document.getElementById('result').cloneNode(true);
+      cloneTr.firstElementChild.innerText = el[0];
+      cloneTr.lastElementChild.innerText = el[1];
+      return cloneTr;
+    }
+  </script>
+</body>
+</html>

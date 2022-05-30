@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ch06/ajax.html</title>
+  <script>
+    let xhtp = new XMLHttpRequest();
+    xhtp.open('GET', 'MOCK_DATA.json'); //서버 페이지 요청할때 open을 쓴다 open('GET', '요청할 페이지 주소')
+    xhtp.send(); // send를 써야 요청이 완료됨
+
+    xhtp.onload = function () {
+      //json 형태로 변경시키는 법
+      let result = JSON.parse(xhtp.responseText); //json 타입에 parse를 사용하여 자바스크립트에서 오브젝트타입으로 사용할수있게 한다
+      console.log(result);
+      let ul = document.createElement('ul'); // ul이라는 태그를 만듬 <ul></ul>
+      result.forEach(function (el) {
+        let li = document.createElement('li');
+        li.innerText = el.first_name + ', ' + el.email //innerText는 속성이다
+        ul.append(li); //ul과 li를 부모자식관계로 만듬 append <ul><li> ~ </li> <li> ~ </li></ul>
+      });
+      document.body.append(ul);
+
+
+
+      // let result = xhtp.responseText;
+      // console.log();
+      // document.write(result);
+    }
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
