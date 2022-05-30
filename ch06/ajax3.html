@@ -48,8 +48,8 @@
         table.append(makeHeader());
         // table.append(makeBody(dataAry)); // 바디에 배열전체의 매개값을 넘겨줌
         table.append(makeBody(fAry, 1)); // 서울특별시만 찾기 추가된 1은 1페이지만 보겠다는 뜻
-        makePage(fAry);
         document.getElementById('show').append(table);
+        makePage(fAry); //밑으로 내려서 보기 편함
       }
     };
 
@@ -63,7 +63,7 @@
         //includes를 사용하여 특정이름만 사용해도 포함된거 전부 검색할수있게바꿈
       });
       document.getElementById('tbl').append(makeBody(fAry, 1));
-      makePage(fAry);
+      makePage(fAry); 
     });
 
 
@@ -124,6 +124,36 @@
       })
       return tr;
     }
+
+    // <select id="class">
+    //           <optgroup label="공과대학">
+    //             <option value="a">건축공학과</option>
+    //             <option value="b">기계공학과</option>
+    //             <option value="c">산업공학과</option>
+    //             <option value="d">전기전자공학과</option>
+    //             <option value="e">컴퓨터공학과</option>
+    //             <option value="f">화학공학과</option>
+    //           </optgroup>
+    //         </select>
+
+    function makeDrop() {
+      let sl = document.createElement('select'); // select태그를 만듬 <select></select>
+      fields.forEach(field => {
+        let td = document.createElement('td'); // td태그를 만듬 <select></select>
+        if (field != 'address') {
+          td.innerText = obj[field];
+        } else if (field == 'address') {
+          let a = document.createElement('a');
+          a.setAttribute('href', `daumapp.html?centerName=${obj.centerName}&xpos=${obj.lat}&ypos=${obj.lng}`); // daumapp.html파일과 연결함 거기에 있는 xpos과 ypos. ..
+          a.setAttribute('target', '_blank');
+          a.innerText = obj[field];
+          td.append(a);
+        }
+        tr.append(td); // <td>서울특별시 ~~ </td>
+      })
+      return tr;
+    }
+
 
 
     // 페이지 생성
