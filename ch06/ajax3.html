@@ -46,7 +46,8 @@
         table.setAttribute('border', 1); // <table border = 1>
         table.setAttribute('id', 'tbl');// 아이디값이 tbl인 값을 찾아와서 append할것이다.
         table.append(makeHeader());
-        // table.append(makeBody(dataAry)); // 바디에 배열전체의 매개값을 넘겨줌
+        // table.append(makeBody(dataAry));
+         // 바디에 배열전체의 매개값을 넘겨줌
         table.append(makeBody(fAry, 1)); // 서울특별시만 찾기 추가된 1은 1페이지만 보겠다는 뜻
         document.getElementById('show').append(table);
         makePage(fAry); //밑으로 내려서 보기 편함

@@ -8,5 +8,13 @@
 </head>
 <body>
   <h3>hello world</h3>
+  <script>
+    let xhtp = new XMLHttpRequest();
+    xhtp.open('GET', 'http://localohst/serverProj/data.txt');
+    xhtp.send();
+    xhtp.onload = function () {
+      console.log(xhtp.responseText)
+    }
+  </script>
 </body>
 </html>
